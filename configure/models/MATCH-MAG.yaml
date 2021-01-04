@@ -1,0 +1,23 @@
+name: MATCH
+
+model:
+  hidden_size: 100
+  n_layers: 3
+  n_probes: 5
+  n_aheads: 2
+  intermediate_size: 400
+  dropout: 0.1
+  src_max_len: 500
+
+train:
+  batch_size: 256
+  nb_epoch: 15
+  swa_warmup: 4
+
+valid:
+  batch_size: 256
+
+predict:
+  batch_size: 256
+
+path: /shared/data2/yuz9/MATCH/MCorNet/data/MAG/models

@@ -1,0 +1,22 @@
+name: MeSH
+
+train:
+  texts: /shared/data2/yuz9/MATCH/MCorNet/data/MeSH/train_texts.npy
+  labels: /shared/data2/yuz9/MATCH/MCorNet/data/MeSH/train_labels.npy
+
+valid:
+  size: 89855
+
+test:
+  texts: /shared/data2/yuz9/MATCH/MCorNet/data/MeSH/test_texts.npy
+
+embedding:
+  emb_init: /shared/data2/yuz9/MATCH/MCorNet/data/MeSH/emb_init.npy
+
+output:
+  res: /shared/data2/yuz9/MATCH/MCorNet/data/MeSH/results
+
+labels_binarizer: /shared/data2/yuz9/MATCH/MCorNet/data/MeSH/labels_binarizer
+
+model:
+  emb_size: 100
