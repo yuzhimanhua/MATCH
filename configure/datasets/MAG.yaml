@@ -1,22 +1,22 @@
 name: MAG
 
 train:
-  texts: /shared/data2/yuz9/MATCH/MCorNet/data/MAG/train_texts.npy
-  labels: /shared/data2/yuz9/MATCH/MCorNet/data/MAG/train_labels.npy
+  texts: /shared/data2/yuz9/MATCH/MATCH/data/MAG/train_texts.npy
+  labels: /shared/data2/yuz9/MATCH/MATCH/data/MAG/train_labels.npy
 
 valid:
   size: 70534
 
 test:
-  texts: /shared/data2/yuz9/MATCH/MCorNet/data/MAG/test_texts.npy
+  texts: /shared/data2/yuz9/MATCH/MATCH/data/MAG/test_texts.npy
 
 embedding:
-  emb_init: /shared/data2/yuz9/MATCH/MCorNet/data/MAG/emb_init.npy
+  emb_init: /shared/data2/yuz9/MATCH/MATCH/data/MAG/emb_init.npy
 
 output:
-  res: /shared/data2/yuz9/MATCH/MCorNet/data/MAG/results
+  res: /shared/data2/yuz9/MATCH/MATCH/data/MAG/results
 
-labels_binarizer: /shared/data2/yuz9/MATCH/MCorNet/data/MAG/labels_binarizer
+labels_binarizer: /shared/data2/yuz9/MATCH/MATCH/data/MAG/labels_binarizer
 
 model:
   emb_size: 100

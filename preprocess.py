@@ -17,7 +17,6 @@ def tokenize(sentence: str, sep='/SEP/'):
 
 @click.command()
 @click.option('--text-path', type=click.Path(exists=True), help='Path of text.')
-@click.option('--tokenized-path', type=click.Path(), default=None, help='Path of tokenized text.')
 @click.option('--label-path', type=click.Path(exists=True), default=None, help='Path of labels.')
 @click.option('--vocab-path', type=click.Path(), default=None,
 			  help='Path of vocab, if it doesn\'t exit, build one and save it.')
@@ -25,14 +24,8 @@ def tokenize(sentence: str, sep='/SEP/'):
 @click.option('--w2v-model', type=click.Path(), default=None, help='Path of Gensim Word2Vec Model.')
 @click.option('--vocab-size', type=click.INT, default=500000, help='Size of vocab.')
 @click.option('--max-len', type=click.INT, default=500, help='Truncated length.')
-def main(text_path, tokenized_path, label_path, vocab_path, emb_path, w2v_model, vocab_size, max_len):
-	if tokenized_path is not None:
-		logger.info(F'Tokenizing Text. {text_path}')
-		with open(text_path) as fp, open(tokenized_path, 'w') as fout:
-			for line in tqdm(fp, desc='Tokenizing'):
-				print(*tokenize(line), file=fout)
-		text_path = tokenized_path
 
+def main(text_path, label_path, vocab_path, emb_path, w2v_model, vocab_size, max_len):
 	if not os.path.exists(vocab_path):
 		logger.info(F'Building Vocab. {text_path}')
 		with open(text_path) as fp:

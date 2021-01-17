@@ -14,7 +14,7 @@ from deepxml.models import Model
 from deepxml.match import MATCH
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ['CUDA_VISIBLE_DEVICES'] = '5'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
 
 
 @click.command()

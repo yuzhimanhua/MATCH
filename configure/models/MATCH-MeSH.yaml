@@ -3,11 +3,11 @@ name: MATCH
 model:
   hidden_size: 100
   n_layers: 3
-  n_probes: 5
+  n_probes: 8
   n_aheads: 2
   intermediate_size: 400
   dropout: 0.1
-  src_max_len: 200
+  src_max_len: 500
 
 train:
   batch_size: 256
@@ -20,4 +20,4 @@ valid:
 predict:
   batch_size: 256
 
-path: /shared/data2/yuz9/MATCH/MCorNet/data/MeSH/models
+path: /shared/data2/yuz9/MATCH/MATCH/data/MeSH/models
