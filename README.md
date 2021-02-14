@@ -66,7 +66,9 @@ Here, each paper is represented by its [Microsoft Academic Graph (MAG)](https://
 ```
 Using this vocabulary, you can recover the original text information for your own use.
 
-**NOTE: If you would like to run our code on your own datasets, there is no need to represent each paper/author/word as a number. Just make sure (1) each paper/venue/author/word name does not have whitespace inside and (2) the "paper" field and the "reference" field are referring to the same namespace.**
+The labels in MAG are organized into a DAG-structured hierarachy. The hierarchy information is in ```MAG/taxonomy.txt```. Each line in a number of labels separated by whitespace. The first label is the parent label and the remaining ones are its children.
+
+**NOTE: If you would like to run our code on your own datasets, there is no need to represent each paper/author/word as a number. Just make sure that (1) each paper/venue/author/word name does not have whitespace inside and (2) the "paper" field and the "reference" field are referring to the same namespace.**
 
 ### PubMed
 The format of ```MeSH/MeSH.json``` is as follows:
@@ -87,17 +89,61 @@ The format of ```MeSH/MeSH.json``` is as follows:
   ]
 }
 ```
-Here, each paper (in the "paper" and "reference" fields) or author is still represented by its MAG ID. We also provide the [PubMed](https://pubmed.ncbi.nlm.nih.gov/) ID of each paper in the "PMID" field. Each label is represented by its [MeSH](https://meshb-prev.nlm.nih.gov/search) ID. We also provide a vocabulary file ```MeSH/vocabulary.txt``` for you to recover the original text information.
+Here, each paper (in the "paper" and "reference" fields) or author is still represented by its MAG ID. We also provide the [PubMed](https://pubmed.ncbi.nlm.nih.gov/) ID of each paper in the "PMID" field. Each label is represented by its [MeSH](https://meshb-prev.nlm.nih.gov/search) ID. We also provide a vocabulary file ```MeSH/vocabulary.txt``` for you to recover the original text information. 
+
+The hierarchy information is in ```MeSH/taxonomy.txt```.
 
 ## Running
 
 The [Quick Start](#quick-start) section should be enough to reproduce the results in out paper. Here are more details of running our code.
 
 ### Embedding Pre-Training
+In the dataset folders, we have provided the pre-trained embedding files ```MAG/MAG.joint.emb``` and ```MeSH/MeSH.joint.emb```. If you would like to rerun embedding pre-training:
+```
+cd joint/
+unzip eigen-3.3.3.zip
+make
+./run.sh
+```
+Make sure that (1) you have installed the [GSL](https://www.gnu.org/software/gsl/) package and (2) the "dataset" in ```run.sh``` is correct (default is MAG).
+
+The output embedding will be in the corresponding dataset folder (e.g., ```MAG/MAG.joint.emb```). If you have changed the pre-trained embedding file, you need to rerun ```./preprocess.sh``` before training the model.
 
 ### Training
+In ```run_models.sh```, you can see the following command for training:
+```
+PYTHONFAULTHANDLER=1 python main.py --data-cnf configure/datasets/$DATASET.yaml --model-cnf configure/models/$MODEL-$DATASET.yaml --mode train --reg 1
+```
+The dataset/model configuration files are ```configure/datasets/$DATASET.yaml``` and ```configure/models/$MODEL-$DATASET.yaml```. You can make changes in these files to tune some parameters (e.g., number of Transformer layers, number of \[CLS\] tokens, number of attention heads, etc.).
+
+```--reg 1``` means the model should use hypernymy regularization. If you do not want it (e.g., there is no label hierarchy in your dataset), just change it to ```--reg 0```.
+
+After training , the model will be saved in ```$DATASET/models/```.
 
 ### Testing
+In ```run_models.sh```, you can see the following command for testing:
+```
+PYTHONFAULTHANDLER=1 python main.py --data-cnf configure/datasets/$DATASET.yaml --model-cnf configure/models/$MODEL-$DATASET.yaml --mode eval
+```
+After testing, the predicted labels (top-100) and the correpsonding probabilities will be in ```$DATASET/results/$MODEL-$DATASET-labels.npy``` and ```$DATASET/results/$MODEL-$DATASET-scores.npy```, respectively.
+
+Then the following command is used for evaluation:
+```
+python evaluation.py \
+--results $DATASET/results/$MODEL-$DATASET-labels.npy \
+--targets $DATASET/test_labels.npy \
+--train-labels $DATASET/train_labels.npy
+```
+As mentioned in [Quick Start](#quick-start), P@_k_ and NDCG@_k_ scores will be shown in the last several lines of the output. The prediction results (top-5 labels) can be found in ```./predictions.txt```.
+
+### Running on New Datasets
+To run our models on new datasets, you need to prepare the following files:
+
+(1) ```$DATASET/$DATASET.json```. The dataset file. Each line is a json record. Please refer to ```MAG/MAG.json```. After having this file, you need to split them into training, validation, and testing files (```$DATASET/train.json```, ```$DATASET/dev.json```, and ```$DATASET/test.json```). The example code for splitting is given in ```MAG/Split.py```.
+
+(2) ```$DATASET/taxonomy.txt```. The hierarchy file. Each line in a number of labels separated by whitespace. The first label is the parent label and the remaining ones are its children.
+
+(3) ```configure/datasets/$DATASET.yaml``` and ```configure/models/MATCH-$DATASET.yaml``` specifying the hyperparameters and file locations of your new dataset. Please refer to ```configure/datasets/MAG.yaml``` and ```configure/models/MATCH-MAG.yaml```.
 
 ## Citation
 If you find the implementation useful, please cite the following paper:
@@ -107,6 +153,6 @@ If you find the implementation useful, please cite the following paper:
   author={Zhang, Yu and Shen, Zhihong and Dong, Yuxiao and Wang, Kuansan and Han, Jiawei},
   booktitle={WWW'21},
   year={2021},
-  organization={{ACM} / {IW3C2}}
+  organization={ACM / IW3C2}
 }
 ```
