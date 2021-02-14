@@ -2,6 +2,14 @@
 
 This project focuses on metadata/hierarchy-aware extreme multi-label text classification.
 
+## Links
+
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Data](#data)
+- [Running](#running)
+- [Citation](#citation)
+
 ## Installation
 
 For training, GPUs are required. In our experiments, the code is run on two GeForce GTX 1080.
@@ -24,7 +32,7 @@ To reproduce the results in our paper, you need to first download the [**dataset
 ```
 ./run_models.sh
 ```
-P@_k_ and NDCG@_k_ scores will be shown in the last several lines of the output. The prediction results (top-5 labels of each testing document) can be found in ```./predictions.txt```. For more detailed output (e.g., the trained model and the prediction scores), please refer to the **Running** section below.
+P@_k_ and NDCG@_k_ scores will be shown in the last several lines of the output. The prediction results (top-5 labels of each testing document) can be found in ```./predictions.txt```. For more detailed output (e.g., the trained model and the prediction scores), please refer to the [Running](#running) section below.
 
 ## Data
 The datasets are provided in json format (```MAG/MAG.json``` and ```MeSH/MeSH.json```). Each line in the json file represent one document. 
@@ -82,3 +90,23 @@ The format of ```MeSH/MeSH.json``` is as follows:
 Here, each paper (in the "paper" and "reference" fields) or author is still represented by its MAG ID. We also provide the [PubMed](https://pubmed.ncbi.nlm.nih.gov/) ID of each paper in the "PMID" field. Each label is represented by its [MeSH](https://meshb-prev.nlm.nih.gov/search) ID. We also provide a vocabulary file ```MeSH/vocabulary.txt``` for you to recover the original text information.
 
 ## Running
+
+The [Quick Start](#quick-start) section should be enough to reproduce the results in out paper. Here are more details of running our code.
+
+### Embedding Pre-Training
+
+### Training
+
+### Testing
+
+## Citation
+If you find the implementation useful, please cite the following paper:
+```
+@inproceedings{zhang2021match,
+  title={MATCH: Metadata-Aware Text Classification in A Large Hierarchy},
+  author={Zhang, Yu and Shen, Zhihong and Dong, Yuxiao and Wang, Kuansan and Han, Jiawei},
+  booktitle={WWW'21},
+  year={2021},
+  organization={{ACM} / {IW3C2}}
+}
+```
