@@ -1,22 +1,24 @@
 name: MeSH
 
 train:
-  texts: /shared/data2/yuz9/MATCH/MATCH/data/MeSH/train_texts.npy
-  labels: /shared/data2/yuz9/MATCH/MATCH/data/MeSH/train_labels.npy
+  texts: MeSH/train_texts.npy
+  labels: MeSH/train_labels.npy
 
 valid:
   size: 89855
 
 test:
-  texts: /shared/data2/yuz9/MATCH/MATCH/data/MeSH/test_texts.npy
+  texts: MeSH/test_texts.npy
 
 embedding:
-  emb_init: /shared/data2/yuz9/MATCH/MATCH/data/MeSH/emb_init.npy
+  emb_init: MeSH/emb_init.npy
+
+hierarchy: MeSH/taxonomy.txt
 
 output:
-  res: /shared/data2/yuz9/MATCH/MATCH/data/MeSH/results
+  res: MeSH/results
 
-labels_binarizer: /shared/data2/yuz9/MATCH/MATCH/data/MeSH/labels_binarizer
+labels_binarizer: MeSH/labels_binarizer
 
 model:
   emb_size: 100

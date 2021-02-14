@@ -20,4 +20,4 @@ valid:
 predict:
   batch_size: 256
 
-path: /shared/data2/yuz9/MATCH/MATCH/data/MeSH/models
+path: MeSH/models

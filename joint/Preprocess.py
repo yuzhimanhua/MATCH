@@ -1,43 +1,42 @@
 import json
 from collections import defaultdict
+import argparse
 
-folder = '/shared/data2/yuz9/MATCH/MAG_data/'
-tot = 705425
+parser = argparse.ArgumentParser(description='main', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--dataset', default='MAG', choices=['MAG', 'MeSH'])
+
+args = parser.parse_args()
+folder = '../'+args.dataset+'/'
+
 thrs = 5
-
 left = set()
 right = set()
 
 node2cnt = defaultdict(int)
-with open(folder+'MAG_CS.json') as fin:
+with open(folder+'train.json') as fin:
 	for idx, line in enumerate(fin):
 		if idx % 10000 == 0:
 			print(idx)
-		if idx >= tot * 0.8:
-			continue
-			
 		js = json.loads(line)
+		
 		for W in js['text'].split():
 			node2cnt[W] += 1
-
+		
 		for A0 in js['author']:
 			A = 'AUTHOR_' + A0
 			node2cnt[A] += 1
 
-with open(folder+'MAG_CS.json') as fin, open('mag/network.dat', 'w') as fout:
+with open(folder+'train.json') as fin, open('network.dat', 'w') as fout:
 	for idx, line in enumerate(fin):
 		if idx % 10000 == 0:
 			print(idx)
-		if idx >= tot * 0.8:
-			continue
-
 		js = json.loads(line)
 
 		P = 'PAPER_'+js['paper']
 		left.add(P)
 		
 		# P-L		
-		for L0 in js['fos']:
+		for L0 in js['label']:
 			L = 'LABEL_' + L0
 			fout.write(P+' '+L+' 0 1 \n')
 			right.add(L)
@@ -74,14 +73,14 @@ with open(folder+'MAG_CS.json') as fin, open('mag/network.dat', 'w') as fout:
 				continue
 			for j in range(i-5, i+6):
 				if j < 0 or j >= len(words) or j == i:
-					break
+					continue
 				Wj = words[j]
 				if node2cnt[Wj] < thrs:
 					continue
 				fout.write(Wj+' '+Wi+' 5 1 \n')
 				left.add(Wj)
 			
-with open('mag/left.dat', 'w') as fou1, open('mag/right.dat', 'w') as fou2:
+with open('left.dat', 'w') as fou1, open('right.dat', 'w') as fou2:
 	for x in left:
 		fou1.write(x+'\n')
 	for x in right:

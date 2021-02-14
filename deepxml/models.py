@@ -8,12 +8,11 @@ from tqdm import tqdm
 from logzero import logger
 from typing import Optional, Mapping
 
-from deepxml.evaluation import get_p_5, get_n_5
+from deepxml.evaluation import get_p_1, get_p_3, get_p_5, get_n_1, get_n_3, get_n_5
 from deepxml.optimizers import DenseSparseAdam
 
-
 class Model(object):
-	def __init__(self, network, model_path, gradient_clip_value=5.0, device_ids=None, **kwargs):
+	def __init__(self, network, model_path, mode, reg=False, hierarchy=set(), gradient_clip_value=5.0, device_ids=None, **kwargs):
 		self.model = nn.DataParallel(network(**kwargs).cuda(), device_ids=device_ids)
 		self.loss_fn = nn.BCEWithLogitsLoss()
 		self.model_path, self.state = model_path, {}
@@ -21,15 +20,30 @@ class Model(object):
 		self.gradient_clip_value, self.gradient_norm_queue = gradient_clip_value, deque([np.inf], maxlen=5)
 		self.optimizer = None
 
+		self.reg = reg
+		if mode == 'train' and reg:
+			self.hierarchy = hierarchy
+			self.lambda1 = 1e-8
+
 	def train_step(self, train_x: torch.Tensor, train_y: torch.Tensor):
 		self.optimizer.zero_grad()
 		self.model.train()
 		scores = self.model(train_x)
 		loss = self.loss_fn(scores, train_y)
+				
+		if self.reg:
+			probs = torch.sigmoid(scores)
+			regs = torch.zeros(len(probs), len(self.hierarchy))
+			for tup in self.hierarchy:
+				p = tup[0]
+				c = tup[1]
+				regs = probs[:,c] - probs[:,p]
+			loss += self.lambda1 * torch.sum(nn.functional.relu(regs)).item()
+
 		loss.backward()
 		self.clip_gradient()
 		self.optimizer.step(closure=None)
-		return loss.item()
+		return loss.item()	
 
 	def predict_step(self, data_x: torch.Tensor, k: int):
 		self.model.eval()
@@ -44,14 +58,14 @@ class Model(object):
 			  nb_epoch=100, step=100, k=5, early=100, verbose=True, swa_warmup=None, **kwargs):
 		self.get_optimizer(**({} if opt_params is None else opt_params))
 		global_step, best_n5, e = 0, 0.0, 0
-		print_loss = 0.0#
+		print_loss = 0.0
 		for epoch_idx in range(nb_epoch):
 			if epoch_idx == swa_warmup:
 				self.swa_init()
 			for i, (train_x, train_y) in enumerate(train_loader, 1):
 				global_step += 1
 				loss = self.train_step(train_x, train_y.cuda())
-				print_loss += loss#
+				print_loss += loss
 				if global_step % step == 0:
 					self.swa_step()
 					self.swap_swa_params()
@@ -69,7 +83,7 @@ class Model(object):
 					labels = np.concatenate(labels)
 
 					targets = valid_loader.dataset.data_y
-					p5, n5 = get_p_5(labels, targets), get_n_5(labels, targets)
+					p1, p3, p5, n3, n5 = get_p_1(labels, targets), get_p_3(labels, targets), get_p_5(labels, targets), get_n_3(labels, targets), get_n_5(labels, targets)
 					if n5 > best_n5:
 						self.save_model(True)
 						best_n5, e = n5, 0
@@ -79,8 +93,8 @@ class Model(object):
 							return
 					self.swap_swa_params()
 					if verbose:
-						log_msg = '%d %d train loss: %.7f valid loss: %.7f P@5: %.5f N@5: %.5f early stop: %d' % \
-						(epoch_idx, i * train_loader.batch_size, print_loss / step, valid_loss, round(p5, 5), round(n5, 5), e)
+						log_msg = '%d %d train loss: %.7f valid loss: %.7f P@1: %.5f P@3: %.5f P@5: %.5f N@3: %.5f N@5: %.5f early stop: %d' % \
+						(epoch_idx, i * train_loader.batch_size, print_loss / step, valid_loss, round(p1, 5), round(p3, 5), round(p5, 5), round(n3, 5), round(n5, 5), e)
 						logger.info(log_msg)
 						print_loss = 0.0
 

@@ -2,18 +2,10 @@ import os
 import re
 import click
 import numpy as np
-from nltk.tokenize import word_tokenize
 from tqdm import tqdm
 from logzero import logger
 
 from deepxml.data_utils import build_vocab, convert_to_binary
-
-
-def tokenize(sentence: str, sep='/SEP/'):
-	# We added a /SEP/ symbol between titles and descriptions such as Amazon datasets.
-	return [token.lower() if token != sep else token for token in word_tokenize(sentence)
-			if len(re.sub(r'[^\w]', '', token)) > 0]
-
 
 @click.command()
 @click.option('--text-path', type=click.Path(exists=True), help='Path of text.')
@@ -42,7 +34,6 @@ def main(text_path, label_path, vocab_path, emb_path, w2v_model, vocab_size, max
 	if labels is not None:
 		assert len(texts) == len(labels)
 		np.save(os.path.splitext(label_path)[0], labels)
-
 
 if __name__ == '__main__':
 	main()
