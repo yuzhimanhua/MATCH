@@ -157,4 +157,4 @@ If you find the implementation useful, please cite the following paper:
 }
 ```
 
-Oue implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet).
+Our implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet).
