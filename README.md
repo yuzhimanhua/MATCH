@@ -156,3 +156,5 @@ If you find the implementation useful, please cite the following paper:
   organization={ACM / IW3C2}
 }
 ```
+
+Oue implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet).
