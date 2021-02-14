@@ -146,7 +146,7 @@ To run our models on new datasets, you need to prepare the following files:
 (3) ```configure/datasets/$DATASET.yaml``` and ```configure/models/MATCH-$DATASET.yaml``` specifying the hyperparameters and file locations of your new dataset. Please refer to ```configure/datasets/MAG.yaml``` and ```configure/models/MATCH-MAG.yaml```.
 
 ## Citation
-If you find the implementation useful, please cite the following paper:
+Our implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet). If you find the implementation useful, please cite the following paper:
 ```
 @inproceedings{zhang2021match,
   title={MATCH: Metadata-Aware Text Classification in A Large Hierarchy},
@@ -156,5 +156,3 @@ If you find the implementation useful, please cite the following paper:
   organization={ACM / IW3C2}
 }
 ```
-
-Our implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet).
