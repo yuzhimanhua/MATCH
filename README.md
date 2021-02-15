@@ -139,7 +139,7 @@ As mentioned in [Quick Start](#quick-start), P@_k_ and NDCG@_k_ scores will be s
 ### Running on New Datasets
 To run our models on new datasets, you need to prepare the following files:
 
-(1) ```$DATASET/$DATASET.json```. The dataset file. Each line is a json record. Please refer to ```MAG/MAG.json```. After having this file, you need to split them into training, validation, and testing files (```$DATASET/train.json```, ```$DATASET/dev.json```, and ```$DATASET/test.json```). The example code for splitting is given in ```MAG/Split.py```.
+(1) ```$DATASET/$DATASET.json```. The dataset file. Each line is a json record. Please refer to ```MAG/MAG.json```. After having this file, you need to split it into training, validation, and testing files (```$DATASET/train.json```, ```$DATASET/dev.json```, and ```$DATASET/test.json```). The example code for splitting is given in ```MAG/Split.py```.
 
 (2) ```$DATASET/taxonomy.txt```. The hierarchy file. Each line in a number of labels separated by whitespace. The first label is the parent label and the remaining ones are its children.
 
