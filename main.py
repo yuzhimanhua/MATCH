@@ -55,12 +55,14 @@ def main(data_cnf, model_cnf, mode, reg):
 				for line in fin:
 					data = line.strip().split()
 					p = data[0]
-					if p in classes:
-						p_id = classes.index(p)
-						for c in data[1:]:
-							if c in classes:
-								c_id = classes.index(c)
-								edges.add((p_id, c_id))
+					if p not in classes:
+						continue
+					p_id = classes.index(p)
+					for c in data[1:]:
+						if c not in classes:
+							continue
+						c_id = classes.index(c)
+						edges.add((p_id, c_id))
 			logger.info(F'Number of Edges: {len(edges)}')
 
 		logger.info('Training')

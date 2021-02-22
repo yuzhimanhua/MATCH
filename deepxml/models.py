@@ -12,7 +12,7 @@ from deepxml.evaluation import get_p_1, get_p_3, get_p_5, get_n_1, get_n_3, get_
 from deepxml.optimizers import DenseSparseAdam
 
 class Model(object):
-	def __init__(self, network, model_path, mode, reg=False, hierarchy=set(), gradient_clip_value=5.0, device_ids=None, **kwargs):
+	def __init__(self, network, model_path, mode, reg=False, hierarchy=None, gradient_clip_value=5.0, device_ids=None, **kwargs):
 		self.model = nn.DataParallel(network(**kwargs).cuda(), device_ids=device_ids)
 		self.loss_fn = nn.BCEWithLogitsLoss()
 		self.model_path, self.state = model_path, {}
@@ -24,21 +24,33 @@ class Model(object):
 		if mode == 'train' and reg:
 			self.hierarchy = hierarchy
 			self.lambda1 = 1e-8
+			self.lambda2 = 1e-8 
 
 	def train_step(self, train_x: torch.Tensor, train_y: torch.Tensor):
 		self.optimizer.zero_grad()
 		self.model.train()
 		scores = self.model(train_x)
 		loss = self.loss_fn(scores, train_y)
-				
+
 		if self.reg:
+			# Output Regularization
 			probs = torch.sigmoid(scores)
 			regs = torch.zeros(len(probs), len(self.hierarchy))
-			for tup in self.hierarchy:
+			for idx, tup in enumerate(self.hierarchy):
 				p = tup[0]
 				c = tup[1]
-				regs = probs[:,c] - probs[:,p]
+				regs[:,idx] = probs[:,c] - probs[:,p]
 			loss += self.lambda1 * torch.sum(nn.functional.relu(regs)).item()
+
+			# # Parameter Regularization
+			# # Note: Adding this will make your model training slow
+			# weights = self.model.module.plaincls.out_mesh_dstrbtn.weight
+			# regs = torch.zeros(len(weights[0]), len(self.hierarchy)).cuda()
+			# for idx, tup in enumerate(self.hierarchy):
+			# 	p = tup[0]
+			# 	c = tup[1]
+			# 	regs[:,idx] = weights[p] - weights[c]
+			# loss += self.lambda2 * 1/2 * torch.norm(regs, p=2) ** 2
 
 		loss.backward()
 		self.clip_gradient()

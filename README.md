@@ -66,7 +66,31 @@ Here, each paper is represented by its [Microsoft Academic Graph (MAG)](https://
 ```
 Using this vocabulary, you can recover the original text information for your own use.
 
+We also provide the mapping from each author/label ID to the corresponding name. The author mapping can be found in ```MAG/id2author.txt```.
+```
+7574581 Zdenek Krnoul
+2404438944  Milos Zelezný
+2490164490  Jan Novák
+2656294450  Petr Císar
+22492467  Adam Kilgarriff
+```
+The label mapping can be found in ```MAG/id2label.txt```.
+```
+10389098  batch_file
+11045955  elgamal_encryption
+13818915  2_3_tree
+18781661  star_height
+19044487  control_zone
+```
+
 The labels in MAG are organized into a DAG-structured hierarachy. The hierarchy information is in ```MAG/taxonomy.txt```. Each line in a number of labels separated by whitespace. The first label is the parent label and the remaining ones are its children.
+```
+92111932  22965304
+56317617  67422183
+186429297 90240001
+45384764  26336911
+89720835  46359721  2780477985  73510573
+```
 
 **NOTE: If you would like to run our code on your own datasets, there is no need to represent each paper/author/word as a number. Just make sure that (1) each paper/venue/author/word name does not have whitespace inside and (2) the "paper" field and the "reference" field are referring to the same namespace.**
 
@@ -89,9 +113,9 @@ The format of ```MeSH/MeSH.json``` is as follows:
   ]
 }
 ```
-Here, each paper (in the "paper" and "reference" fields) or author is still represented by its MAG ID. We also provide the [PubMed](https://pubmed.ncbi.nlm.nih.gov/) ID of each paper in the "PMID" field. Each label is represented by its [MeSH](https://meshb-prev.nlm.nih.gov/search) ID. We also provide a vocabulary file ```MeSH/vocabulary.txt``` for you to recover the original text information. 
+Here, each paper (in the "paper" and "reference" fields) or author is still represented by its MAG ID. We also provide the [PubMed](https://pubmed.ncbi.nlm.nih.gov/) ID of each paper in the "PMID" field. Each label is represented by its [MeSH](https://meshb-prev.nlm.nih.gov/search) ID. 
 
-The hierarchy information is in ```MeSH/taxonomy.txt```.
+The vocabulary, author mapping, label mapping, and hierarchy information is in ```MeSH/vocabulary.txt```, ```MeSH/id2author.txt```, ```MeSH/id2label.txt```, and ```MeSH/taxonomy.txt```, respectively.
 
 ## Running
 
