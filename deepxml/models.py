@@ -24,7 +24,7 @@ class Model(object):
 		if mode == 'train' and reg:
 			self.hierarchy = hierarchy
 			self.lambda1 = 1e-8
-			self.lambda2 = 1e-8 
+			self.lambda2 = 1e-10 
 
 	def train_step(self, train_x: torch.Tensor, train_y: torch.Tensor):
 		self.optimizer.zero_grad()
@@ -35,7 +35,7 @@ class Model(object):
 		if self.reg:
 			# Output Regularization
 			probs = torch.sigmoid(scores)
-			regs = torch.zeros(len(probs), len(self.hierarchy))
+			regs = torch.zeros(len(probs), len(self.hierarchy)).cuda()
 			for idx, tup in enumerate(self.hierarchy):
 				p = tup[0]
 				c = tup[1]
