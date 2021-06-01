@@ -129,7 +129,7 @@ unzip eigen-3.3.3.zip
 make
 ./run.sh
 ```
-Make sure that (1) you have installed the [GSL](https://www.gnu.org/software/gsl/) package and (2) the "dataset" in ```run.sh``` is correct (default is MAG).
+Make sure that (1) you have installed the [**GSL**](https://www.gnu.org/software/gsl/) package and (2) the "dataset" in ```run.sh``` is correct (default is MAG). For GSL, you can download the zip file [here](https://drive.google.com/file/d/1UvmgrZbycC7wYAHahYGRB5pRtu6Aurhv/view?usp=sharing).
 
 The output embedding will be in the corresponding dataset folder (e.g., ```MAG/MAG.joint.emb```). If you have changed the pre-trained embedding file, you need to rerun ```./preprocess.sh``` before training the model.
 
