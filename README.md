@@ -176,6 +176,7 @@ Our implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet
   title={MATCH: Metadata-Aware Text Classification in A Large Hierarchy},
   author={Zhang, Yu and Shen, Zhihong and Dong, Yuxiao and Wang, Kuansan and Han, Jiawei},
   booktitle={WWW'21},
+  pages={3246--3257},
   year={2021},
   organization={ACM / IW3C2}
 }
