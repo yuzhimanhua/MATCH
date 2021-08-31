@@ -35,6 +35,24 @@ To reproduce the results in our paper, you need to first download the [**dataset
 P@_k_ and NDCG@_k_ scores will be shown in the last several lines of the output. The prediction results (top-5 labels of each testing document) can be found in ```./predictions.txt```. For more detailed output (e.g., the trained model and the prediction scores), please refer to the [Running](#running) section below.
 
 ## Data
+Two datasets are used in our paper.
+|  | MAG-CS | PubMed | 
+|--|--------|--------|
+| \# Training Documents   | 564,340 | 718,837 |
+| \# Validation Documents | 70,534  | 89,855  |
+| \# Testing Documents    | 70,533  | 89,854  |
+| \# Labels               | 15,809 (15,308 appear in training) | 17,963 (17,763 appear in training) |
+| \# Labels / Doc         | 5.60    | 7.78    |
+| Vocabulary Size         | 425,316 (sorry for the typo in original paper) | 776,975 |
+| \# Words / Doc          | 126.33  | 198.97  |
+| \# Authors              | 818,927 | 2,201,919 |
+| \# Venues               | 105     | 150     |
+| \# Paper-Author Edges   | 2,274,546 | 5,989,142 |
+| \# Paper-Venue Edges    | 705,407 | 898,546 |
+| \# Paper-Paper Edges    | 1,518,466 | 4,455,702 |
+| \# Edges in Taxonomy    | 27,288  | 22,842  |
+| \# Layers of Taxonomy   | 6       | 15      |
+
 The datasets are provided in json format (```MAG/MAG.json``` and ```MeSH/MeSH.json```). Each line in the json file represent one document. 
 
 ### MAG-CS
