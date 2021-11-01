@@ -8,7 +8,7 @@ This project focuses on metadata/hierarchy-aware extreme multi-label text classi
 - [Quick Start](#quick-start)
 - [Data](#data)
 - [Running](#running)
-- [Running on New Datasets](#new)
+- [Running on New Datasets](#running-on-new-datasets)
 - [Citation](#citation)
 
 ## Installation
@@ -151,7 +151,7 @@ The first 4 files have been introduced above. The last file, ```meta_dict.json``
 ```
 {"metadata": ["venue", "author", "reference"]}
 ```
-Our code also support new datasets with **new metadata fields**. Please refer to [Running on New Datasets](#new) below.
+Our code also support new datasets with **new metadata fields**. Please refer to [Running on New Datasets](#running-on-new-datasets) below.
 
 ### Embedding Pre-Training
 In the dataset folders, we have provided the pre-trained embedding files ```MAG/MAG.joint.emb``` and ```MeSH/MeSH.joint.emb```. To rerun embedding pre-training:
