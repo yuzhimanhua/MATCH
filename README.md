@@ -8,6 +8,7 @@ This project focuses on metadata/hierarchy-aware extreme multi-label text classi
 - [Quick Start](#quick-start)
 - [Data](#data)
 - [Running](#running)
+- [Running on New Datasets](#new)
 - [Citation](#citation)
 
 ## Installation
@@ -101,6 +102,8 @@ The label mapping can be found in ```MAG/id2label.txt```.
 19044487  control_zone
 ```
 
+**We divide ```MAG.json``` into ```train.json```, ```dev.json```, and ```test.json``` using a 80%-10%-10% split.** 
+
 The labels in MAG are organized into a DAG-structured hierarachy. The hierarchy information is in ```MAG/taxonomy.txt```. Each line in a number of labels separated by whitespace. The first label is the parent label and the remaining ones are its children.
 ```
 92111932  22965304
@@ -110,7 +113,7 @@ The labels in MAG are organized into a DAG-structured hierarachy. The hierarchy 
 89720835  46359721  2780477985  73510573
 ```
 
-**NOTE: If you would like to run our code on your own datasets, there is no need to represent each paper/author/word as a number. Just make sure that (1) each paper/venue/author/word name does not have whitespace inside and (2) the "paper" field and the "reference" field are referring to the same namespace.**
+**NOTE: If you would like to run our code on your own datasets, there is no need to represent each paper, word, or metadata instance (e.g., author, reference) as a number. Just make sure that (1) each paper, word, or metadata instance does not have whitespace inside and (2) the "paper" field and the "reference" field are referring to the same namespace.**
 
 ### PubMed
 The format of ```MeSH/MeSH.json``` is as follows:
@@ -133,14 +136,25 @@ The format of ```MeSH/MeSH.json``` is as follows:
 ```
 Here, each paper (in the "paper" and "reference" fields) or author is still represented by its MAG ID. We also provide the [PubMed](https://pubmed.ncbi.nlm.nih.gov/) ID of each paper in the "PMID" field. Each label is represented by its [MeSH](https://meshb-prev.nlm.nih.gov/search) ID. 
 
-The vocabulary, author mapping, label mapping, and hierarchy information is in ```MeSH/vocabulary.txt```, ```MeSH/id2author.txt```, ```MeSH/id2label.txt```, and ```MeSH/taxonomy.txt```, respectively.
+Similarly, we divide ```MeSH.json``` into ```train.json```, ```dev.json```, and ```test.json``` using a 80%-10%-10% split. The vocabulary, author mapping, label mapping, and hierarchy information is in ```MeSH/vocabulary.txt```, ```MeSH/id2author.txt```, ```MeSH/id2label.txt```, and ```MeSH/taxonomy.txt```, respectively.
 
 ## Running
 
 The [Quick Start](#quick-start) section should be enough to reproduce the results in out paper. Here are more details of running our code.
 
+### Required Input Files
+There are many input files in our provided ```MAG/``` and ```MeSH``` folders. Some of them are optional and describe more information about the datasets, while the following 5 input files are required to run the code.
+
+**```train.json```, ```dev.json```, ```test.json```, ```taxonomy.txt```, and ```meta_dict.json```.**
+
+The first 4 files have been introduced above. The last file, ```meta_dict.json```, describes the metadata fields you would like to use in ```train.json```, ```dev.json```, and ```test.json```. For example, for both MAG-CS and PubMed, ```meta_dict.json``` is
+```
+{"metadata": ["venue", "author", "reference"]}
+```
+Our code also support new datasets with **new metadata fields**. Please refer to [Running on New Datasets](#new) below.
+
 ### Embedding Pre-Training
-In the dataset folders, we have provided the pre-trained embedding files ```MAG/MAG.joint.emb``` and ```MeSH/MeSH.joint.emb```. If you would like to rerun embedding pre-training:
+In the dataset folders, we have provided the pre-trained embedding files ```MAG/MAG.joint.emb``` and ```MeSH/MeSH.joint.emb```. To rerun embedding pre-training:
 ```
 cd joint/
 unzip eigen-3.3.3.zip
@@ -149,16 +163,26 @@ make
 ```
 Make sure that (1) you have installed the [**GSL**](https://www.gnu.org/software/gsl/) package and (2) the "dataset" in ```run.sh``` is correct (default is MAG). For GSL, you can download the zip file [here](https://drive.google.com/file/d/1UvmgrZbycC7wYAHahYGRB5pRtu6Aurhv/view?usp=sharing).
 
-The output embedding will be in the corresponding dataset folder (e.g., ```MAG/MAG.joint.emb```). If you have changed the pre-trained embedding file, you need to rerun ```./preprocess.sh``` before training the model.
+The output embedding will be in the corresponding dataset folder (e.g., ```MAG/MAG.joint.emb```). 
+
+### Preprocessing
+```
+./preprocess.sh
+```
 
 ### Training
+The following script contains commands for both training and testing.
+```
+./run_models.sh
+```
+
 In ```run_models.sh```, you can see the following command for training:
 ```
-PYTHONFAULTHANDLER=1 python main.py --data-cnf configure/datasets/$DATASET.yaml --model-cnf configure/models/$MODEL-$DATASET.yaml --mode train --reg 1
+PYTHONFAULTHANDLER=1 python main.py --data-cnf configure/datasets/$DATASET.yaml --model-cnf configure/models/$MODEL-$DATASET.yaml --mode train --reg 0
 ```
 The dataset/model configuration files are ```configure/datasets/$DATASET.yaml``` and ```configure/models/$MODEL-$DATASET.yaml```. You can make changes in these files to tune some parameters (e.g., number of Transformer layers, number of \[CLS\] tokens, number of attention heads, etc.).
 
-```--reg 1``` means the model should use hypernymy regularization. If you do not want it (e.g., there is no label hierarchy in your dataset), just change it to ```--reg 0```.
+```--reg 0``` means the model does not use hypernymy regularization. If you need it, just change it to ```--reg 1```.
 
 After training , the model will be saved in ```$DATASET/models/```.
 
@@ -178,14 +202,18 @@ python evaluation.py \
 ```
 As mentioned in [Quick Start](#quick-start), P@_k_ and NDCG@_k_ scores will be shown in the last several lines of the output. The prediction results (top-5 labels) can be found in ```./predictions.txt```.
 
-### Running on New Datasets
-To run our models on new datasets, you need to prepare the following files:
+## Running on New Datasets
+To run our model on new datasets, you need to prepare the following things:
 
-(1) ```$DATASET/$DATASET.json```. The dataset file. Each line is a json record. Please refer to ```MAG/MAG.json```. After having this file, you need to split it into training, validation, and testing files (```$DATASET/train.json```, ```$DATASET/dev.json```, and ```$DATASET/test.json```). The example code for splitting is given in ```MAG/Split.py```.
+(1) Create a new dataset folder ```$DATASET/```.
 
-(2) ```$DATASET/taxonomy.txt```. The hierarchy file. Each line in a number of labels separated by whitespace. The first label is the parent label and the remaining ones are its children.
+(2) The training, validation, and testing files ```$DATASET/train.json```, ```$DATASET/dev.json```, and ```$DATASET/test.json```. Each line is a json record. **Each json record must have the fields "paper" (i.e., document id), "text", and "label". You can define your own metadata fields, but make sure each of them is either a list of strings (e.g., "author") or a single string value (e.g., "venue").**
 
-(3) ```configure/datasets/$DATASET.yaml``` and ```configure/models/MATCH-$DATASET.yaml``` specifying the hyperparameters and file locations of your new dataset. Please refer to ```configure/datasets/MAG.yaml``` and ```configure/models/MATCH-MAG.yaml```.
+(3) The metadata field file ```$DATASET/meta_dict.json```. You need to tell us your defined metadata fields. Please refer to ```MAG/meta_dict.json```.
+
+(4) The hierarchy file ```$DATASET/taxonomy.txt```. Each line in a number of labels separated by whitespace. The first label is the parent label and the remaining ones are its children. Please refer to ```MAG/taxonomy.txt```.
+
+(5) ```configure/datasets/$DATASET.yaml``` and ```configure/models/MATCH-$DATASET.yaml``` specifying the hyperparameters and file locations of your new dataset. Please refer to ```configure/datasets/MAG.yaml``` and ```configure/models/MATCH-MAG.yaml```.
 
 ## Citation
 Our implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet). If you find the implementation useful, please cite the following paper:
