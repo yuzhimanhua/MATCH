@@ -4,8 +4,6 @@ dataset=MAG
 
 python joint_preprocess.py --dataset $dataset
 
-# unzip eigen-3.3.3.zip
-# make
 threads=5 # number of threads for training
 negative=5 # number of negative samples
 alpha=0.04 # initial learning rate
