@@ -102,7 +102,7 @@ The label mapping can be found in ```MAG/id2label.txt```.
 19044487  control_zone
 ```
 
-**We divide ```MAG.json``` into ```train.json```, ```dev.json```, and ```test.json``` using a 80%-10%-10% split.** 
+**We divide ```MAG.json``` into ```train.json```, ```dev.json```, and ```test.json``` using an 80%-10%-10% split.** 
 
 The labels in MAG are organized into a DAG-structured hierarachy. The hierarchy information is in ```MAG/taxonomy.txt```. Each line in a number of labels separated by whitespace. The first label is the parent label and the remaining ones are its children.
 ```
@@ -136,14 +136,14 @@ The format of ```MeSH/MeSH.json``` is as follows:
 ```
 Here, each paper (in the "paper" and "reference" fields) or author is still represented by its MAG ID. We also provide the [PubMed](https://pubmed.ncbi.nlm.nih.gov/) ID of each paper in the "PMID" field. Each label is represented by its [MeSH](https://meshb-prev.nlm.nih.gov/search) ID. 
 
-Similarly, we divide ```MeSH.json``` into ```train.json```, ```dev.json```, and ```test.json``` using a 80%-10%-10% split. The vocabulary, author mapping, label mapping, and hierarchy information is in ```MeSH/vocabulary.txt```, ```MeSH/id2author.txt```, ```MeSH/id2label.txt```, and ```MeSH/taxonomy.txt```, respectively.
+Similarly, we divide ```MeSH.json``` into ```train.json```, ```dev.json```, and ```test.json``` using an 80%-10%-10% split. The vocabulary, author mapping, label mapping, and hierarchy information is in ```MeSH/vocabulary.txt```, ```MeSH/id2author.txt```, ```MeSH/id2label.txt```, and ```MeSH/taxonomy.txt```, respectively.
 
 ## Running
 
 The [Quick Start](#quick-start) section should be enough to reproduce the results in out paper. Here are more details of running our code.
 
 ### Required Input Files
-There are many input files in our provided ```MAG/``` and ```MeSH``` folders. Some of them are optional and describe more information about the datasets, while the following 5 input files are required to run the code.
+There are many input files in our provided ```MAG/``` and ```MeSH``` folders. Some of them are optional and describe more information about the datasets, while the following 5 input files are required to run the code:
 
 **```train.json```, ```dev.json```, ```test.json```, ```taxonomy.txt```, and ```meta_dict.json```.**
 
@@ -158,12 +158,13 @@ In the dataset folders, we have provided the pre-trained embedding files ```MAG/
 ```
 cd joint/
 unzip eigen-3.3.3.zip
+unzip gsl.zip
 make
 ./run.sh
 ```
-Make sure that (1) you have installed the [**GSL**](https://www.gnu.org/software/gsl/) package and (2) the "dataset" in ```run.sh``` is correct (default is MAG). For GSL, you can download the zip file [here](https://drive.google.com/file/d/1UvmgrZbycC7wYAHahYGRB5pRtu6Aurhv/view?usp=sharing).
+The commands above will install 2 external packages, Eigen and GSL (first used in [PTE](https://github.com/mnqu/PTE)). After installing the package, if needed, users also need to modify the package path in the makefile.
 
-The output embedding will be in the corresponding dataset folder (e.g., ```MAG/MAG.joint.emb```). 
+Make sure the "dataset" in ```run.sh``` is correct before running (default is MAG). The output embedding will be in the corresponding dataset folder (e.g., ```MAG/MAG.joint.emb```). 
 
 ### Preprocessing
 ```
