@@ -7,41 +7,35 @@ parser.add_argument('--dataset', default='MAG', choices=['MAG', 'MeSH'])
 args = parser.parse_args()
 folder = args.dataset
 
-with open(folder+'/train.json') as fin, open(folder+'/train_texts.txt', 'w') as fou1, open(folder+'/train_labels.txt', 'w') as fou2:
-	for line in fin:
-		data = json.loads(line)
+with open(f'{folder}/meta_dict.json') as fin:
+	meta_dict = json.load(fin)
+	meta_set = meta_dict['metadata']
 
-		venue = 'VENUE_'+data['venue'].replace(' ', '_')
-		author = ' '.join(['AUTHOR_'+x for x in data['author']])
-		reference = ' '.join(['REFP_'+x for x in data['reference']])
-		text = venue + ' ' + author + ' ' + reference + ' ' + data['text']
-		label = ' '.join(data['label'])
+data_files = ['train', 'dev', 'test']
+for data_file in data_files:
+	if data_file == 'train':
+		output_file = 'train'
+		mode = 'w'
+	elif data_file == 'dev':
+		output_file = 'train'
+		mode = 'a'
+	else:
+		output_file = 'test'
+		mode = 'w'
+	
+	with open(f'{folder}/{data_file}.json') as fin, open(f'{folder}/{output_file}_texts.txt', mode) as fou1, open(f'{folder}/{output_file}_labels.txt', mode) as fou2:
+		for line in fin:
+			data = json.loads(line)
 
-		fou1.write(text+'\n')
-		fou2.write(label+'\n')
-
-with open(folder+'/dev.json') as fin, open(folder+'/train_texts.txt', 'a') as fou1, open(folder+'/train_labels.txt', 'a') as fou2:
-	for line in fin:
-		data = json.loads(line)
-
-		venue = 'VENUE_'+data['venue'].replace(' ', '_')
-		author = ' '.join(['AUTHOR_'+x for x in data['author']])
-		reference = ' '.join(['REFP_'+x for x in data['reference']])
-		text = venue + ' ' + author + ' ' + reference + ' ' + data['text']
-		label = ' '.join(data['label'])
-
-		fou1.write(text+'\n')
-		fou2.write(label+'\n')
-
-with open(folder+'/test.json') as fin, open(folder+'/test_texts.txt', 'w') as fou1, open(folder+'/test_labels.txt', 'w') as fou2:
-	for line in fin:
-		data = json.loads(line)
-
-		venue = 'VENUE_'+data['venue'].replace(' ', '_')
-		author = ' '.join(['AUTHOR_'+x for x in data['author']])
-		reference = ' '.join(['REFP_'+x for x in data['reference']])
-		text = venue + ' ' + author + ' ' + reference + ' ' + data['text']
-		label = ' '.join(data['label'])
-
-		fou1.write(text+'\n')
-		fou2.write(label+'\n')
+			metadata = []
+			for meta in meta_set:
+				if type(data[meta]) is not list:
+					metadata.append(meta.upper()+'_'+data[meta].replace(' ', '_'))
+				else:
+					for x in data[meta]:
+						metadata.append(meta.upper()+'_'+x.replace(' ', '_'))
+			
+			text = ' '.join(metadata) + ' ' + data['text']
+			label = ' '.join(data['label'])
+			fou1.write(text+'\n')
+			fou2.write(label+'\n')

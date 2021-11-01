@@ -6,12 +6,7 @@ LIBS = -L/usr/local/lib
 
 BIN = bin/jointemb
 
-all: eigen-3.3.3 bin $(BIN)
-
-eigen-3.3.3:
-	curl https://bitbucket.org/eigen/eigen/get/3.3.3.tar.bz2  --output eigen-3.3.3.tar.gz
-	tar -xf eigen-3.3.3.tar.gz
-	mv eigen-eigen-67e894c6cd8f eigen-3.3.3
+all: bin $(BIN)
 
 bin:
 	mkdir bin

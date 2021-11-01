@@ -2,7 +2,7 @@
 
 dataset=MAG
 
-python Preprocess.py --dataset $dataset
+python joint_preprocess.py --dataset $dataset
 
 # unzip eigen-3.3.3.zip
 # make
@@ -10,7 +10,7 @@ threads=5 # number of threads for training
 negative=5 # number of negative samples
 alpha=0.04 # initial learning rate
 sample=5000 # number of training samples (Million)
-type=6 # number of edge types
+type=4 # number of edge types
 dim=100
 
 word_file="left.dat"

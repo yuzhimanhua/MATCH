@@ -67,9 +67,9 @@ def main(data_cnf, model_cnf, mode, reg):
 
 		logger.info('Training')
 		train_loader = DataLoader(MultiLabelDataset(train_x, train_y),
-								  model_cnf['train']['batch_size'], shuffle=True, num_workers=4)
+								  model_cnf['train']['batch_size'], shuffle=True, num_workers=0)
 		valid_loader = DataLoader(MultiLabelDataset(valid_x, valid_y, training=True),
-								  model_cnf['valid']['batch_size'], num_workers=4)
+								  model_cnf['valid']['batch_size'], num_workers=0)
 		model = Model(network=MATCH, labels_num=labels_num, model_path=model_path, emb_init=emb_init, mode='train', reg=reg, hierarchy=edges,
 					  **data_cnf['model'], **model_cnf['model'])
 		model.train(train_loader, valid_loader, **model_cnf['train'])
@@ -83,7 +83,7 @@ def main(data_cnf, model_cnf, mode, reg):
 		logger.info(F'Size of Test Set: {len(test_x)}')
 
 		logger.info('Predicting')
-		test_loader = DataLoader(MultiLabelDataset(test_x), model_cnf['predict']['batch_size'], num_workers=4)
+		test_loader = DataLoader(MultiLabelDataset(test_x), model_cnf['predict']['batch_size'], num_workers=0)
 		if model is None:
 			model = Model(network=MATCH, labels_num=labels_num, model_path=model_path, emb_init=emb_init, mode='eval',
 						  **data_cnf['model'], **model_cnf['model'])
