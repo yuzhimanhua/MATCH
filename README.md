@@ -1,6 +1,6 @@
 # MATCH: Metadata-Aware Text Classification in A Large Hierarchy
 
-This project focuses on metadata/hierarchy-aware extreme multi-label text classification.
+This repository contains the source code for [**MATCH: Metadata-Aware Text Classification in A Large Hierarchy**](https://arxiv.org/abs/2102.07349).
 
 ## Links
 
