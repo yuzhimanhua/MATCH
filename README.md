@@ -44,7 +44,7 @@ Two datasets are used in our paper.
 | \# Testing Documents    | 70,533  | 89,854  |
 | \# Labels               | 15,809 (15,308 appear in training) | 17,963 (17,763 appear in training) |
 | \# Labels / Doc         | 5.60    | 7.78    |
-| Vocabulary Size         | 425,316 (sorry for the typo in original paper) | 776,975 |
+| Vocabulary Size         | **425,316\*** | 776,975 |
 | \# Words / Doc          | 126.33  | 198.97  |
 | \# Authors              | 818,927 | 2,201,919 |
 | \# Venues               | 105     | 150     |
@@ -53,6 +53,8 @@ Two datasets are used in our paper.
 | \# Paper-Paper Edges    | 1,518,466 | 4,455,702 |
 | \# Edges in Taxonomy    | 27,288  | 22,842  |
 | \# Layers of Taxonomy   | 6       | 15      |
+
+**\*: There is a typo in original paper. Please refer to the number here.**
 
 The datasets are provided in json format (```MAG/MAG.json``` and ```MeSH/MeSH.json```). Each line in the json file represent one document. 
 
@@ -74,7 +76,11 @@ The format of ```MAG/MAG.json``` is as follows:
   ]
 }
 ```
-Here, each paper is represented by its [Microsoft Academic Graph (MAG)](https://academic.microsoft.com/home) Paper ID (in both the "paper" field and the "reference" field); each author is represented by its MAG author ID; each label is represented by its MAG Field-of-Study ID. The "text" field is a sequence of words. Due to copyright issues, we represent each word as a number. Meanwhile, we provide a vocabulary file ```MAG/vocabulary.txt``` which maps each number back to its original word.
+Here, each paper is represented by its [Microsoft Academic Graph (MAG)](https://academic.microsoft.com/home) Paper ID (in both the "paper" field and the "reference" field); each author is represented by its MAG author ID; each label is represented by its MAG Field-of-Study ID. 
+
+**NOTE: In both datasets, there are a few papers appearing in the "reference" field but not appearing as a record in the dataset. In other words, a paper Y may be in the "reference" field of a paper X, but there is no record in the dataset whose "paper" field is Y.**
+
+The "text" field is a sequence of words. Due to copyright issues, we represent each word as a number. Meanwhile, we provide a vocabulary file ```MAG/vocabulary.txt``` which maps each number back to its original word.
 ```
 0	engineered
 1	annexin
