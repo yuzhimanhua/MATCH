@@ -22,8 +22,8 @@ def main(results, targets, train_labels):
 
 	mlb = MultiLabelBinarizer(sparse_output=True)
 	targets = mlb.fit_transform(targets)
-	print('Precision@1,3,5:', get_p_1(res, targets, mlb), get_p_3(res, targets, mlb), get_p_5(res, targets, mlb))
-	print('nDCG@1,3,5:', get_n_1(res, targets, mlb), get_n_3(res, targets, mlb), get_n_5(res, targets, mlb))
+	print('P@1,3,5:', get_p_1(res, targets, mlb), ',', get_p_3(res, targets, mlb), ',', get_p_5(res, targets, mlb))
+	print('NDCG@1,3,5:', get_n_1(res, targets, mlb), ',', get_n_3(res, targets, mlb), ',', get_n_5(res, targets, mlb))
 	
 if __name__ == '__main__':
 	main()

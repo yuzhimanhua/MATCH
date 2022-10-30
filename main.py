@@ -36,9 +36,7 @@ def main(data_cnf, model_cnf, mode, reg):
 		train_x, train_labels = get_data(data_cnf['train']['texts'], data_cnf['train']['labels'])
 		if 'size' in data_cnf['valid']:
 			random_state = data_cnf['valid'].get('random_state', 1240)
-			train_x, valid_x, train_labels, valid_labels = train_test_split(train_x, train_labels,
-																			test_size=data_cnf['valid']['size'],
-																			random_state=random_state)
+			train_x, valid_x, train_labels, valid_labels = train_test_split(train_x, train_labels, test_size=data_cnf['valid']['size'], random_state=random_state)
 		else:
 			valid_x, valid_labels = get_data(data_cnf['valid']['texts'], data_cnf['valid']['labels'])
 		mlb = get_mlb(data_cnf['labels_binarizer'], np.hstack((train_labels, valid_labels)))
@@ -66,10 +64,8 @@ def main(data_cnf, model_cnf, mode, reg):
 			logger.info(F'Number of Edges: {len(edges)}')
 
 		logger.info('Training')
-		train_loader = DataLoader(MultiLabelDataset(train_x, train_y),
-								  model_cnf['train']['batch_size'], shuffle=True, num_workers=0)
-		valid_loader = DataLoader(MultiLabelDataset(valid_x, valid_y, training=True),
-								  model_cnf['valid']['batch_size'], num_workers=0)
+		train_loader = DataLoader(MultiLabelDataset(train_x, train_y), model_cnf['train']['batch_size'], shuffle=True, num_workers=0)
+		valid_loader = DataLoader(MultiLabelDataset(valid_x, valid_y, training=True), model_cnf['valid']['batch_size'], num_workers=0)
 		model = Model(network=MATCH, labels_num=labels_num, model_path=model_path, emb_init=emb_init, mode='train', reg=reg, hierarchy=edges,
 					  **data_cnf['model'], **model_cnf['model'])
 		model.train(train_loader, valid_loader, **model_cnf['train'])

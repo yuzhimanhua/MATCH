@@ -43,7 +43,6 @@ class Model(object):
 			loss += self.lambda1 * torch.sum(nn.functional.relu(regs)).item()
 
 			# Parameter Regularization
-			# Note: Adding this will make your model training slow
 			# weights = self.model.module.plaincls.out_mesh_dstrbtn.weight
 			# regs = torch.zeros(len(weights[0]), len(self.hierarchy)).cuda()
 			# for idx, tup in enumerate(self.hierarchy):

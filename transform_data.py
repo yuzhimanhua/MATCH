@@ -1,5 +1,6 @@
 import json
 import argparse
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description='main', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--dataset', default='MAG', choices=['MAG', 'MeSH'])
@@ -24,9 +25,8 @@ for data_file in data_files:
 		mode = 'w'
 	
 	with open(f'{folder}/{data_file}.json') as fin, open(f'{folder}/{output_file}_texts.txt', mode) as fou1, open(f'{folder}/{output_file}_labels.txt', mode) as fou2:
-		for line in fin:
+		for line in tqdm(fin):
 			data = json.loads(line)
-
 			metadata = []
 			for meta in meta_set:
 				if type(data[meta]) is not list:

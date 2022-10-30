@@ -1,6 +1,7 @@
 import json
 from collections import defaultdict
 import argparse
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description='main', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--dataset', default='MAG', choices=['MAG', 'MeSH'])
@@ -18,9 +19,7 @@ with open(folder+'meta_dict.json') as fin:
 
 node2cnt = defaultdict(int)
 with open(folder+'train.json') as fin:
-	for idx, line in enumerate(fin):
-		if idx % 10000 == 0:
-			print(idx)
+	for idx, line in enumerate(tqdm(fin)):
 		data = json.loads(line)
 		
 		for W in data['text'].split():
@@ -34,9 +33,7 @@ with open(folder+'train.json') as fin:
 				node2cnt[M] += 1
 
 with open(folder+'train.json') as fin, open('network.dat', 'w') as fout:
-	for idx, line in enumerate(fin):
-		if idx % 10000 == 0:
-			print(idx)
+	for idx, line in enumerate(tqdm(fin)):
 		data = json.loads(line)
 
 		P = 'PAPER_'+data['paper']
