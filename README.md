@@ -1,5 +1,7 @@
 # MATCH: Metadata-Aware Text Classification in A Large Hierarchy
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 This repository contains the source code for [**MATCH: Metadata-Aware Text Classification in A Large Hierarchy**](https://arxiv.org/abs/2102.07349).
 
 ## Links
@@ -54,7 +56,7 @@ Two datasets are used in our paper.
 | \# Edges in Taxonomy    | 27,288  | 22,842  |
 | \# Layers of Taxonomy   | 6       | 15      |
 
-**\*: There is a typo in original paper. Please refer to the number here.**
+**\*: There is a typo in the original paper. Please refer to the number here.**
 
 The datasets are provided in json format (```MAG/MAG.json``` and ```MeSH/MeSH.json```). Each line in the json file represent one document. 
 
