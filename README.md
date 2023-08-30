@@ -15,7 +15,7 @@ This repository contains the source code for [**MATCH: Metadata-Aware Text Class
 
 ## Installation
 
-For training, GPUs are required. In our experiments, the code is run on two GeForce GTX 1080.
+For training, GPUs are required. We use two NVIDIA GeForce GTX 1080 GPUs in our experiments.
 
 ### Dependency
 The code is written in Python 3.6. The dependencies are summarized in the file ```requirements.txt```. You can install them like this:
@@ -23,6 +23,7 @@ The code is written in Python 3.6. The dependencies are summarized in the file `
 ```
 pip3 install -r requirements.txt
 ```
+
 ## Quick Start
 To reproduce the results in our paper, you need to first download the [**datasets**](https://drive.google.com/file/d/1pn9WhPxIR4J7Wgm5_AJLgNHvTaMexDcC/view?usp=sharing). Two datasets are used in the paper: **MAG-CS** and **PubMed**. Once you unzip the downloaded file, you can see two folders, ```MAG/``` (corresponding to MAG-CS) and ```MeSH/``` (corresponding to PubMed). You need to put these two folders under the repository main folder ```./```. Then you need to run the following scripts.
 
@@ -225,7 +226,7 @@ To run our model on new datasets, you need to prepare the following things:
 (5) ```configure/datasets/$DATASET.yaml``` and ```configure/models/MATCH-$DATASET.yaml``` specifying the hyperparameters and file locations of your new dataset. Please refer to ```configure/datasets/MAG.yaml``` and ```configure/models/MATCH-MAG.yaml```.
 
 ## Citation
-Our implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet). If you find the implementation useful, please cite the following paper:
+Our implementation is adapted from [CorNet](https://github.com/XunGuangxu/CorNet). If you find this repository useful, please cite the following paper:
 ```
 @inproceedings{zhang2021match,
   title={MATCH: Metadata-Aware Text Classification in A Large Hierarchy},
